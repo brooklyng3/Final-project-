@@ -55,6 +55,8 @@ public:
 	void find_item(int);
 	void view_all_item();
 	void load_warehouse(std::string);
+	void save_warehouse(std::string);
+	bool check_id(int);
 };
 
 class Inventory
@@ -70,6 +72,9 @@ public:
 	void find_warehouse_location(int);
 	void load_inventory(std::string);
 	void view_all_warehouse();
+	void save_inventory(std::string);
+	bool check_and_add_item(int);
+	bool check_warehouse(int);
 };
 
 void display();

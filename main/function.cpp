@@ -133,10 +133,36 @@ void Warehouse::view_all_item()
 	for (auto i = Items.begin(); i != Items.end(); i++)
 	{
 		std::cout << "\nID: " << i->get_id();
-		std::cout << "\nMane: " << i->get_name();
+		std::cout << "\nName: " << i->get_name();
 		std::cout << "\nQuantity: " << i->get_quantity();
-		std::cout << "\nPrice: " << i->get_price();
+		std::cout << "\nPrice: " << i->get_price() << std::endl << std::endl;
 	}
+}
+
+void Warehouse::save_warehouse(std::string filename)
+{
+	std::fstream file1;
+	file1.open(filename, std::ios::trunc | std::ios::out);
+	for (int i = 0; i < Items.size(); i++)
+	{
+		Item it = Items[i];
+		file1 << it.get_name() << "," << it.get_quantity() << "," << it.get_price() << "," << it.get_id() << std::endl;
+	}
+	file1.close();
+}
+
+bool Warehouse::check_id(int _id)
+{
+	bool check = true;
+	for (auto& i : Warehouse::Items)
+	{
+		if (i.get_id() == _id)
+		{
+			check = false;
+			return check;
+		}
+	}
+	return check;
 }
 
 
@@ -213,9 +239,53 @@ void Inventory::find_warehouse_location(int _id)
 	if (!check) throw std::invalid_argument("Warehouse not found!");
 }
 
+bool Inventory::check_and_add_item(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			int id, quantity;
+			double price;
+			std::string name;
+			std::cout << "Enter name: ";
+			std::getline(std::cin,name);
+			std::cout << "\nEnter quantity: "; std::cin >> quantity;
+			std::cout << "\nEnter price: "; std::cin >> price;
+			std::cout << "\nEnter id: "; std::cin >> id;
+			if (i->check_id(id) == false)
+			{
+				//throw error unique id found
+				return false;
+			}
+			Item item(name, quantity, price, id);
+			i->add_item(item);
+			return true;
+		}
+	}
+	std::cout << "a";
+	_getch();
+	return false;
+}
+
+bool Inventory::check_warehouse(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			//throw error warehouse already exists
+			return false;
+		}
+
+	}
+	return true;
+}
+
 
 void display()
 {
+	system("cls");
 	std::cout << "1.View all" << std::endl;
 	std::cout << "2.Search\n";
 	std::cout << "3.Add\n";
@@ -287,10 +357,12 @@ void Inventory::view_all_warehouse()
 {
 	for (auto i = Warehouses.begin(); i != Warehouses.end(); i++)
 	{
-		std::cout << "\nID: " << i->get_id();
-		std::cout << "\nMane: " << i->get_name();
-		std::cout << "\Address: " << i->get_address();
-		std::cout << "\Region: " << i->get_region();
+		std::cout << "\nWarehouse " << i->get_id();
+		std::cout << ":\nName: " << i->get_name();
+		std::cout << "\nAddress: " << i->get_address();
+		std::cout << "\nRegion: " << i->get_region() << std::endl << std::endl;
+		std::cout << "Items: \n";
+		i->view_all_item();
 	}
 }
 void Warehouse::load_warehouse(std::string filename)
@@ -318,4 +390,22 @@ void Warehouse::load_warehouse(std::string filename)
 		file.close();
 	}
 	else throw std::invalid_argument("file not found!");
+}
+
+void Inventory::save_inventory(std::string filename)
+{
+	std::fstream file;
+	file.open(filename, std::ios::trunc|std::ios::in|std::ios::out);
+	for (int i = 0; i < Warehouses.size(); i++)
+	{
+		Warehouse w = Warehouses[i];
+		file << w.get_name() << "," << w.get_address() << "," << w.get_region() << "," << w.get_id() << std::endl;
+		
+	}
+	
+	for (auto w = Warehouses.begin(); w != Warehouses.end(); w++)
+	{
+		w->save_warehouse(w->get_name() + ".csv");
+	}
+	file.close();
 }
