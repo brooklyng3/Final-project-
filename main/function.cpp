@@ -89,6 +89,7 @@ void Warehouse::update_item(std::string _name, int _quantity, double _price, int
 			i->set_quantity(_quantity);
 			i->set_price(_price);
 			std::cout << "Item updated successfully!\n";
+			_getch();
 			break;
 		}
 	}
@@ -196,9 +197,12 @@ void Inventory::remove_warehouse(int _id)
 	{
 		if (i->get_id() == _id)
 		{
+			std::string name = i->get_name() + ".csv";
 			Warehouses.erase(i);
 			check = true;
 			std::cout << "Warehouse removed successfully\n";
+			_getch();
+			remove(name.c_str());
 			break;
 		}
 	}
@@ -213,7 +217,6 @@ void Inventory::update_warehouse(int _id, std::string _name, std::string _addres
 		if (i->get_id() == _id)
 		{
 			check = true;
-			i->set_name(_name);
 			i->set_address(_address);
 			i->set_region(_region);
 			std::cout << "Warehouse updated successfully\n";
@@ -280,6 +283,46 @@ bool Inventory::check_warehouse(int _id)
 
 	}
 	return true;
+}
+
+bool Inventory::check_and_delete_item(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			int usr_id;
+			std::cout << "Enter id of the item you want to remove...";
+			std::cin >> usr_id;
+			i->remove_item(usr_id);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Inventory::check_and_update_item(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			int itid,itquantity;
+			std::string itname;
+			double itprice;
+			std::cout << "Enter id of the item you want to update...";
+			std::cin >> itid; std::cin.ignore();
+			std::cout << "Item new name: ";
+			std::getline(std::cin, itname);
+			std::cout << "\nItem new quantity: ";
+			std::cin >> itquantity; std::cin.ignore();
+			std::cout << "\nItem new price: ";
+			std::cin >> itprice;
+			i->update_item(itname, itquantity, itprice, itid);
+			return true;
+		}
+	}
+	return false;
 }
 
 

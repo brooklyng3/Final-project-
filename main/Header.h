@@ -75,6 +75,8 @@ public:
 	void save_inventory(std::string);
 	bool check_and_add_item(int);
 	bool check_warehouse(int);
+	bool check_and_delete_item(int);
+	bool check_and_update_item(int);
 };
 
 void display();
