@@ -27,7 +27,7 @@ void Item::set_price(double _price)
 	price = _price;
 }
 
-std::string Item::get_name() { return name; }
+std::string Item::get_name() const { return name; }
 double Item::get_price() const { return price; }
 int Item::get_quantity() const { return quantity; }
 int Item::get_id() const { return id; }
@@ -109,24 +109,26 @@ void Warehouse::set_region(std::string _region)
 {
 	region = _region;
 }
-std::string Warehouse::get_name() { return name; }
-std::string Warehouse::get_address() { return address; }
-std::string Warehouse::get_region() { return region; }
+std::string Warehouse::get_name() const { return name; }
+std::string Warehouse::get_address() const { return address; }
+std::string Warehouse::get_region() const { return region; }
 
-void Warehouse::find_item(int _id)
-{
+void Warehouse::find_item(int id) {
 	bool check = false;
-	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++)
-	{
-		if (i->get_id() == _id)
-		{
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_id() == id) {
 			check = true;
-			std::cout << "\nMane: " << i->get_name();
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
 			std::cout << "\nQuantity: " << i->get_quantity();
-			std::cout << "\nPrice: " << i->get_price();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+			return;
 		}
 	}
-	if (!check) throw std::invalid_argument("Item not found!");
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
 }
 
 void Warehouse::view_all_item()
@@ -166,6 +168,50 @@ bool Warehouse::check_id(int _id)
 	return check;
 }
 
+void Warehouse::sort_id_a()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const Item& b) { return (a.get_id() < b.get_id()); });
+}
+
+void Warehouse::sort_id_d()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const Item& b) { return (a.get_id() > b.get_id()); });
+}
+
+
+void Warehouse::sort_name_a()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const  Item& b) {
+		return a.get_name() < b.get_name();
+		});
+}
+
+void Warehouse::sort_name_d()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const  Item& b) {
+		return a.get_name() > b.get_name();
+		});
+}
+
+void Warehouse::sort_quantity_a()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const Item& b) { return (a.get_quantity() < b.get_quantity()); });
+}
+
+void Warehouse::sort_quantity_d()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const Item& b) { return (a.get_quantity() > b.get_quantity()); });
+}
+
+void Warehouse::sort_price_a()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const Item& b) {return (a.get_price() < b.get_price()); });
+}
+
+void Warehouse::sort_price_d()
+{
+	std::sort(Items.begin(), Items.end(), [](const Item& a, const Item& b) {return (a.get_price() > b.get_price()); });
+}
 
 
 Inventory::Inventory() {};
@@ -277,7 +323,6 @@ bool Inventory::check_warehouse(int _id)
 	{
 		if (i->get_id() == _id)
 		{
-			//throw error warehouse already exists
 			return false;
 		}
 
@@ -334,6 +379,11 @@ void display()
 	std::cout << "3.Add\n";
 	std::cout << "4.Delete\n";
 	std::cout << "5.Update\n";
+	std::cout << "6.Sort\n";
+	std::cout << "7.Change password\n";
+	std::cout << "8.Create new account\n";
+	std::cout << "9.Delete current account\n";
+	std::cout << "10.Log out\n";
 	std::cout << "0.Exit\n";
 	std::cout << "\nYour choice: ";
 }
@@ -451,4 +501,401 @@ void Inventory::save_inventory(std::string filename)
 		w->save_warehouse(w->get_name() + ".csv");
 	}
 	file.close();
+}
+
+void Inventory::sort_item_by_id_a(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_id_a();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_id_d(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_id_d();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_name_a(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_name_a();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_name_d(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_name_d();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_quantity_a(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_quantity_a();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_quantity_d(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_quantity_d();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_price_a(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_price_a();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_item_by_price_d(int _id)
+{
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		if (i->get_id() == _id)
+		{
+			i->sort_price_d();
+			break;
+		}
+	}
+}
+
+void Inventory::sort_warehouse_by_id_a()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_id() < b.get_id()); });
+}
+
+void Inventory::sort_warehouse_by_id_d()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_id() > b.get_id()); });
+}
+
+void Inventory::sort_warehouse_by_name_a()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_name() < b.get_name()); });
+}
+
+void Inventory::sort_warehouse_by_name_d()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_name() > b.get_name()); });
+}
+
+void Inventory::sort_warehouse_by_address_a()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_address() < b.get_address()); });
+}
+
+void Inventory::sort_warehouse_by_address_d()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_address() > b.get_address()); });
+}
+
+void Inventory::sort_warehouse_by_region_a()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_region() < b.get_region()); });
+}
+
+void Inventory::sort_warehouse_by_region_d()
+{
+	std::sort(Warehouses.begin(), Warehouses.end(), [](const Warehouse& a, const Warehouse& b) { return (a.get_region() > b.get_region()); });
+}
+
+
+void Warehouse::find_item_name(std::string n) {
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) 
+	{
+		size_t found = i->get_name().find(n);
+		if (found!= std::string::npos) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+void Warehouse::find_item_quantity(int quantity) {
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_quantity() == quantity) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+
+void Warehouse::find_item_quantity_s(int quantity)
+{
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_quantity() < quantity) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+
+void Warehouse::find_item_quantity_l(int quantity)
+{
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_quantity() > quantity) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+void Warehouse::find_item_price(double price) {
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_price() == price) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+
+void Warehouse::find_item_price_s(double price) {
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_price() < price) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+
+void Warehouse::find_item_price_l(double price) {
+	bool check = false;
+	for (auto i = Warehouse::Items.begin(); i != Warehouse::Items.end(); i++) {
+		if (i->get_price() > price) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nQuantity: " << i->get_quantity();
+			std::cout << "\nPrice: " << i->get_price() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+void Inventory::find_item_by_id(int id) {
+	int count = 0;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) {
+		count++;
+		std::cout << "\nWarehouse " << count << " : ";
+		i->find_item(id);
+	}
+}
+void Inventory::find_item_by_name(std::string n) {
+	int count = 0;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) {
+		count++;
+		std::cout << "\nWarehouse " << count << " : ";
+		i->find_item_name(n);
+	}
+}
+void Inventory::find_item_by_quantity(int quantity) {
+	int count = 0;
+	std::cout << "\n\nPress [1] for <, press [2] for = and press [3] for > " << quantity << ": ";
+	int usr_choice;
+	std::cin >> usr_choice;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) {
+		count++;
+		std::cout << "\nWarehouse " << count << " : ";
+		if (usr_choice == 1)
+		{
+			i->find_item_quantity_s(quantity);
+		}
+		else if (usr_choice == 2)
+		{
+			i->find_item_quantity(quantity);
+		}
+		else if (usr_choice == 3)
+		{
+			i->find_item_quantity_l(quantity);
+		}
+		else
+		{
+			//them loi o day
+		}		
+	}
+}
+void Inventory::find_item_by_price(double price) {
+	int count = 0;
+	std::cout << "\n\nPress [1] for <, press [2] for = and press [3] for > " << price << ": ";
+	int usr_choice;
+	std::cin >> usr_choice;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) {
+		count++;
+		std::cout << "\nWarehouse " << count << " : ";
+		if (usr_choice == 1)
+		{
+			i->find_item_price_s(price);
+		}
+		else if (usr_choice == 2)
+		{
+			i->find_item_price(price);
+		}
+		else if (usr_choice == 3)
+		{
+			i->find_item_price_l(price);
+		}
+		else
+		{
+			//them loi o day
+		}
+	}
+}
+void Inventory::find_warehouse_by_id(int id) {
+	bool check = false;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) {
+		if (i->get_id() == id) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nAddress: " << i->get_address();
+			std::cout << "\nRegion: " << i->get_region() << std::endl;
+			return;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+void Inventory::find_warehouse_by_name(std::string name) {
+	bool check = false;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
+	{
+		size_t found = i->get_name().find(name);
+		if (found!=std::string::npos) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nAddress: " << i->get_address();
+			std::cout << "\nRegion: " << i->get_region() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+void Inventory::find_warehouse_by_address(std::string address) {
+	bool check = false;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) 
+	{
+		size_t found = i->get_address().find(address);
+		if (found != std::string::npos) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nAddress: " << i->get_address();
+			std::cout << "\nRegion: " << i->get_region() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
+}
+void Inventory::find_warehouse_by_region(std::string region) {
+	bool check = false;
+	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++) 
+	{
+		size_t found = i->get_region().find(region);
+		if (found != std::string::npos) {
+			check = true;
+			std::cout << "\nId :" << i->get_id();
+			std::cout << "\nName: " << i->get_name();
+			std::cout << "\nAddress: " << i->get_address();
+			std::cout << "\nRegion: " << i->get_region() << std::endl;
+		}
+	}
+	if (!check)
+	{
+		std::cout << "Item not found!" << std::endl;
+	}
 }
