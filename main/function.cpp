@@ -408,14 +408,91 @@ bool login(std::string filename)
 			std::string username, password;
 			std::getline(ss, username, ',');
 			std::getline(ss, password, ',');
-			if ((username == usr_username) && (password == usr_password)) return true;
+			if ((username == usr_username) && (password == usr_password))
+			{
+				file.close();
+				return true;
+			}
 		}
 		std::cerr << "Username or password incorrect!\n\n";
 		_getch();
 		system("cls");
+		file.close();
 		return false;
 	}
 	else throw std::invalid_argument("file not found!");
+}
+
+void change_pwd(std::string filename)
+{
+	std::fstream file,file2;
+	std::string usr_username, usr_password;
+	std::cout << "\n\nPlease reenter your credentials: ";
+	std::cout << "\n\nUsername: ";
+	std::cin >> usr_username;
+	std::cout << "\nPassword: ";
+	std::cin >> usr_password;
+	file.open(filename);
+	if (file.is_open())
+	{
+		bool check = false;
+		std::string line;
+		while (getline(file, line))
+		{
+			std::stringstream ss(line);
+			std::string username, password;
+			std::getline(ss, username, ',');
+			std::getline(ss, password, ',');
+			if ((username == usr_username) && (password == usr_password))
+			{
+				check = true;
+				file.close();
+				break;
+			}
+		}
+		if (!check)
+		{
+			std::cerr << "Username or password incorrect!\n\n";
+			std::cout << "Returning to main menu...";
+			_getch();
+			system("cls");
+			file.close();
+			return;
+		}
+	}
+	else
+	{
+		throw std::invalid_argument("file not found!");
+		//them loi o day
+	}
+	file.open(filename);
+	if (file.is_open())
+	{
+		bool check;
+		file2.open("tmp.csv", std::ios::app|std::ios::out);
+		std::string line,new_pwd;
+		while (getline(file, line))
+		{
+			check = false;
+			std::stringstream ss(line);
+			std::string username, password;
+			std::getline(ss, username, ',');
+			std::getline(ss, password, ',');
+			if ((username == usr_username))
+			{
+				std::cout << "New password must not contain [ ] space\n";
+				std::cout << "New password: ";
+				std::cin >> new_pwd;
+				check = true;
+			}
+			if (check) file2 << username << "," << new_pwd << std::endl;
+			else file2 << username << "," << password << std::endl;
+		}
+	}
+	file.close();
+	file2.close();
+	std::remove("credentials.csv");
+	std::rename("tmp.csv", "credentials.csv");
 }
 
 void Inventory::load_inventory(std::string filename)

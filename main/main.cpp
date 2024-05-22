@@ -369,6 +369,10 @@ int main()
 				//loi o day
 			}
 			break;
+		case 7:
+			system("cls");
+			change_pwd("credentials.csv");
+			break;
 		case 10:
 			std::cout << "You are about to log out... Press anykey to continue...";
 			_getch();

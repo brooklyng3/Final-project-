@@ -124,6 +124,8 @@ void display();
 
 bool login(std::string);
 
+void change_pwd(std::string);
+
 
 
 #endif
