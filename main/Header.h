@@ -13,6 +13,7 @@
 #include<conio.h>
 #include <algorithm>
 #include <locale>
+#include <Windows.h>
 
 class Item
 {
@@ -121,10 +122,14 @@ public:
 };
 
 void display();
+bool delete_account(std::string);
+
 
 bool login(std::string);
 
 void change_pwd(std::string);
+void create_new_account(std::string);
+
 
 
 

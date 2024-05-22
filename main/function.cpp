@@ -382,7 +382,7 @@ void display()
 	std::cout << "6.Sort\n";
 	std::cout << "7.Change password\n";
 	std::cout << "8.Create new account\n";
-	std::cout << "9.Delete current account\n";
+	std::cout << "9.Delete account\n";
 	std::cout << "10.Log out\n";
 	std::cout << "0.Exit\n";
 	std::cout << "\nYour choice: ";
@@ -420,7 +420,7 @@ bool login(std::string filename)
 		file.close();
 		return false;
 	}
-	else throw std::invalid_argument("file not found!");
+	else throw std::string("Credential file not found!");
 }
 
 void change_pwd(std::string filename)
@@ -495,6 +495,119 @@ void change_pwd(std::string filename)
 	std::rename("tmp.csv", "credentials.csv");
 }
 
+void create_new_account(std::string filename)
+{
+	std::fstream file;
+	std::string username, password;
+	std::cout << "New account's username: ";
+	std::cin >> username;
+	file.open(filename);
+	if (file.is_open())
+	{
+		std::string line;
+		while (getline(file, line))
+		{
+			std::stringstream ss(line);
+			std::string usr_name, pwd;
+			std::getline(ss, usr_name, ',');
+			std::getline(ss, pwd, ',');
+			if (username == usr_name)
+			{
+				std::cout << "Acount already exists!";
+				std::cout << "\nPress anykey to return to main menu...";
+				_getch();
+				file.close();
+				return;
+			}
+		}
+		file.close();
+	}
+	else
+	{
+		//viet ma loi o day
+	}
+	file.open(filename, std::ios::app | std::ios::out);
+	std::cout << "Password: ";
+	std::cin >> password;
+	file << username << "," << password << std::endl;
+	file.close();
+}
+
+bool delete_account(std::string filename)
+{
+	std::fstream file,file2;
+	int count = 0;
+	std::string usr_username, usr_password;
+	std::cout << "\n\nPlease reenter your credentials: ";
+	std::cout << "\n\nUsername: ";
+	std::cin >> usr_username;
+	std::cout << "\nPassword: ";
+	std::cin >> usr_password;
+	file.open(filename);
+	if (file.is_open())
+	{
+		bool check = false;
+		std::string line;
+		while (getline(file, line))
+		{
+			std::stringstream ss(line);
+			std::string username, password;
+			std::getline(ss, username, ',');
+			std::getline(ss, password, ',');
+			if ((username == usr_username) && (password == usr_password))
+			{
+				check = true;
+				file.close();
+			}
+			count++;
+		}
+		if (!check)
+		{
+			std::cerr << "Username or password incorrect!\n\n";
+			std::cout << "Returning to main menu...";
+			_getch();
+			system("cls");
+			file.close();
+			return true;
+		}
+	}
+	else
+	{
+		throw std::invalid_argument("file not found!");
+		//them loi o day
+	}
+	if (count < 2)
+	{
+		std::cout << "Cannot delete this account because there's no other account to login!";
+		_getch();
+		return true;
+	}
+	else
+	{
+		file.open(filename);
+		if (file.is_open())
+		{
+			file2.open("tmp.csv", std::ios::app | std::ios::out);
+			std::string line, new_pwd;
+			while (getline(file, line))
+			{
+				std::stringstream ss(line);
+				std::string username, password;
+				std::getline(ss, username, ',');
+				std::getline(ss, password, ',');
+				if ((username != usr_username)) file2 << username << "," << password << std::endl;
+			}
+		}
+		file.close();
+		file2.close();
+		std::cout << "Account deleted successfully... Press anykey to continue.";
+		_getch();
+		std::remove("credentials.csv");
+		std::rename("tmp.csv", "credentials.csv");
+		return false;
+	}
+}
+
 void Inventory::load_inventory(std::string filename)
 {
 	std::fstream file;
@@ -516,7 +629,7 @@ void Inventory::load_inventory(std::string filename)
 		}
 		file.close();
 	}
-	else  throw std::invalid_argument("file not found!");
+	else  throw std::string("Could not load inventory! Inventory file not found.");
 	for(auto w = Inventory::Warehouses.begin();w!=Inventory::Warehouses.end();w++)
 	{
 		w->load_warehouse(w->get_name()+".csv");
@@ -875,7 +988,7 @@ void Inventory::find_item_by_quantity(int quantity) {
 		}
 		else
 		{
-			//them loi o day
+			throw std::string("Invalid user choice!");
 		}		
 	}
 }
@@ -976,3 +1089,4 @@ void Inventory::find_warehouse_by_region(std::string region) {
 		std::cout << "Item not found!" << std::endl;
 	}
 }
+
