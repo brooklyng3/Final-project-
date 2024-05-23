@@ -71,6 +71,7 @@ void Warehouse::remove_item(int _id)
 			Items.erase(i);
 			check = true;
 			std::cout << "Item removed successfully\n";
+			_getch();
 			break;
 		}
 	}
@@ -93,7 +94,7 @@ void Warehouse::update_item(std::string _name, int _quantity, double _price, int
 			break;
 		}
 	}
-	if (!check) throw std::invalid_argument("Item not found!");
+	if (!check) throw std::string("Item not found!");
 }
 
 int Warehouse::get_id() const { return id; }
@@ -233,6 +234,7 @@ void Inventory::add_warehouse(Warehouse warehouse)
 	{
 		Warehouses.push_back(warehouse);
 		std::cout << "Warehouse added successfully\n";
+		_getch();
 	}
 }
 
@@ -252,7 +254,7 @@ void Inventory::remove_warehouse(int _id)
 			break;
 		}
 	}
-	if (!check) throw std::invalid_argument("Warehouse not found!");
+	if (!check) throw std::string("Warehouse not found!");
 }
 
 void Inventory::update_warehouse(int _id, std::string _name, std::string _address, std::string _region)
@@ -266,10 +268,11 @@ void Inventory::update_warehouse(int _id, std::string _name, std::string _addres
 			i->set_address(_address);
 			i->set_region(_region);
 			std::cout << "Warehouse updated successfully\n";
+			_getch();
 			break;
 		}
 	}	
-	if (!check) throw std::invalid_argument("Warehouse not found!");
+	if (!check) throw std::string("Warehouse not found!");
 }
 
 void Inventory::find_warehouse_location(int _id)
@@ -304,7 +307,7 @@ bool Inventory::check_and_add_item(int _id)
 			std::cout << "\nEnter id: "; std::cin >> id;
 			if (i->check_id(id) == false)
 			{
-				//throw error unique id found
+				throw std::string("Item already exists!");
 				return false;
 			}
 			Item item(name, quantity, price, id);
@@ -312,8 +315,7 @@ bool Inventory::check_and_add_item(int _id)
 			return true;
 		}
 	}
-	std::cout << "a";
-	_getch();
+	throw std::string("Warehouse not found!");
 	return false;
 }
 
@@ -420,7 +422,7 @@ bool login(std::string filename)
 		file.close();
 		return false;
 	}
-	else throw std::string("Credential file not found!");
+	else throw std::string("Credentials file not found!");
 }
 
 void change_pwd(std::string filename)
@@ -462,8 +464,7 @@ void change_pwd(std::string filename)
 	}
 	else
 	{
-		throw std::invalid_argument("file not found!");
-		//them loi o day
+		throw std::string("Credentials file not found!");
 	}
 	file.open(filename);
 	if (file.is_open())
@@ -524,7 +525,7 @@ void create_new_account(std::string filename)
 	}
 	else
 	{
-		//viet ma loi o day
+		throw std::string("Credentials file not found!");
 	}
 	file.open(filename, std::ios::app | std::ios::out);
 	std::cout << "Password: ";
@@ -573,8 +574,7 @@ bool delete_account(std::string filename)
 	}
 	else
 	{
-		throw std::invalid_argument("file not found!");
-		//them loi o day
+		throw std::string("Credentials file not found!");
 	}
 	if (count < 2)
 	{
@@ -988,7 +988,7 @@ void Inventory::find_item_by_quantity(int quantity) {
 		}
 		else
 		{
-			throw std::string("Invalid user choice!");
+			throw std::string("Invalid user input!");
 		}		
 	}
 }
@@ -1014,7 +1014,7 @@ void Inventory::find_item_by_price(double price) {
 		}
 		else
 		{
-			//them loi o day
+			throw std::string("Invalid user input!") ;
 		}
 	}
 }
