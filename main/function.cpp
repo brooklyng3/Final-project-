@@ -275,21 +275,7 @@ void Inventory::update_warehouse(int _id, std::string _name, std::string _addres
 	if (!check) throw std::string("Warehouse not found!");
 }
 
-void Inventory::find_warehouse_location(int _id)
-{
-	bool check = false;
-	for (auto i = Inventory::Warehouses.begin(); i != Inventory::Warehouses.end(); i++)
-	{
-		if (i->get_id() == _id)
-		{
-			check = true;
-			std::cout << "\nMane: " << i->get_name();
-			std::cout << "\nAddress: " << i->get_address();
-			std::cout << "\nRegion: " << i->get_region();
-		}
-	}
-	if (!check) throw std::invalid_argument("Warehouse not found!");
-}
+
 
 bool Inventory::check_and_add_item(int _id)
 {

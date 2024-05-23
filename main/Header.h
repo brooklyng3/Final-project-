@@ -88,7 +88,6 @@ public:
 	void add_warehouse(Warehouse);
 	void remove_warehouse(int);
 	void update_warehouse(int, std::string, std::string, std::string);
-	void find_warehouse_location(int);
 	void load_inventory(std::string);
 	void view_all_warehouse();
 	void save_inventory(std::string);
